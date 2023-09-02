@@ -3,8 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "nextDev": "next dev",
     "build": "next build",
+    "serverDev": "cd server && npm run dev",
+    "dev": "concurrently -n \"client,server\" -c \"bgBlue,bgYellow\" \"npm run nextDev\" \"npm run serverDev\"",
     "start": "next start",
     "lint": "next lint"
   },
