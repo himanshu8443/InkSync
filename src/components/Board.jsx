@@ -64,6 +64,15 @@ const Board = ({ canvasRef,
                     strokeWidth: 5,
                 });
             }
+            else if (ele.element === "circle") {
+                roughCanvas.draw(
+                    generator.ellipse(ele.offsetX, ele.offsetY, ele.width, ele.height, {
+                        stroke: ele.stroke,
+                        roughness: 0,
+                        strokeWidth: 5,
+                    })
+                );
+            }
         });
 
     }, [elements]);
@@ -149,6 +158,26 @@ const Board = ({ canvasRef,
                 )
             );
         }
+        else if (tool === "circle") {
+            const radius = Math.sqrt(
+                Math.pow(offsetX - elements[elements.length - 1].offsetX, 2) +
+                Math.pow(offsetY - elements[elements.length - 1].offsetY, 2)
+            );
+            setElements((prevElements) =>
+                prevElements.map((ele, index) =>
+                    index === elements.length - 1
+                        ? {
+                            offsetX: ele.offsetX,
+                            offsetY: ele.offsetY,
+                            width: 2 * radius,
+                            height: 2 * radius,
+                            stroke: ele.stroke,
+                            element: ele.element,
+                        }
+                        : ele
+                )
+            );
+        }
     };
 
 
@@ -159,8 +188,7 @@ const Board = ({ canvasRef,
         >
             <canvas
                 ref={canvasRef}
-                width={1400}
-                height={500}
+
 
                 className=' border-2 border-black absolute bottom-0 right-0 cursor-crosshair'
             />

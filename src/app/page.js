@@ -13,7 +13,12 @@ export default function Home() {
 
   return (
     <div>
-      <Toolbar color={color} setColor={setColor} setTool={setTool} />
+      <Toolbar
+        color={color}
+        setColor={setColor}
+        tool={tool}
+        setTool={setTool}
+      />
       <Board
         canvasRef={canvasRef}
         ctx={ctx}
