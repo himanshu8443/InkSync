@@ -12,6 +12,8 @@ const Board = ({ canvasRef,
     setElements,
     elements,
     tool,
+    canvasColor,
+    strokeWidth,
     socket, }) => {
     const [isDrawing, setIsDrawing] = useState(false)
 
@@ -19,11 +21,11 @@ const Board = ({ canvasRef,
         const canvas = canvasRef.current;
         canvas.height = window.innerHeight * 2;
         canvas.width = window.innerWidth * 2;
-        canvas.style.width = `${window.innerWidth}px`;
-        canvas.style.height = `${window.innerHeight}px`;
+        // canvas.style.width = `${window.innerWidth}px`;
+        // canvas.style.height = `${window.innerHeight}px`;
         const context = canvas.getContext("2d");
 
-        context.strokeWidth = 5;
+        context.strokeWidth = strokeWidth;
         context.scale(2, 2);
         context.lineCap = "round";
         context.strokeStyle = color;
@@ -46,7 +48,7 @@ const Board = ({ canvasRef,
                     generator.rectangle(ele.offsetX, ele.offsetY, ele.width, ele.height, {
                         stroke: ele.stroke,
                         roughness: 0,
-                        strokeWidth: 5,
+                        strokeWidth: strokeWidth
                     })
                 );
             } else if (ele.element === "line") {
@@ -54,14 +56,14 @@ const Board = ({ canvasRef,
                     generator.line(ele.offsetX, ele.offsetY, ele.width, ele.height, {
                         stroke: ele.stroke,
                         roughness: 0,
-                        strokeWidth: 5,
+                        strokeWidth: strokeWidth,
                     })
                 );
             } else if (ele.element === "pencil") {
                 roughCanvas.linearPath(ele.path, {
                     stroke: ele.stroke,
                     roughness: 0,
-                    strokeWidth: 5,
+                    strokeWidth: strokeWidth,
                 });
             }
             else if (ele.element === "circle") {
@@ -69,7 +71,7 @@ const Board = ({ canvasRef,
                     generator.ellipse(ele.offsetX, ele.offsetY, ele.width, ele.height, {
                         stroke: ele.stroke,
                         roughness: 0,
-                        strokeWidth: 5,
+                        strokeWidth: strokeWidth,
                     })
                 );
             }
@@ -80,7 +82,19 @@ const Board = ({ canvasRef,
 
 
     const handleMouseDown = (e) => {
-        const { offsetX, offsetY } = e.nativeEvent;
+        let offsetX;
+        let offsetY;
+        if (e.touches) {
+            // Touch event
+            var bcr = e.target.getBoundingClientRect();
+            offsetX = e.targetTouches[0].clientX - bcr.x;
+            offsetY = e.targetTouches[0].clientY - bcr.y;
+        } else {
+            // Mouse event
+            offsetX = e.nativeEvent.offsetX;
+            offsetY = e.nativeEvent.offsetY;
+        }
+
 
         if (tool === "pencil") {
             setElements((prevElements) => [
@@ -111,7 +125,18 @@ const Board = ({ canvasRef,
         if (!isDrawing) {
             return;
         }
-        const { offsetX, offsetY } = e.nativeEvent;
+        let offsetX;
+        let offsetY;
+        if (e.touches) {
+            // Touch event
+            var bcr = e.target.getBoundingClientRect();
+            offsetX = e.targetTouches[0].clientX - bcr.x;
+            offsetY = e.targetTouches[0].clientY - bcr.y;
+        } else {
+            // Mouse event
+            offsetX = e.nativeEvent.offsetX;
+            offsetY = e.nativeEvent.offsetY;
+        }
 
         if (tool === "rect") {
             setElements((prevElements) =>
@@ -185,12 +210,15 @@ const Board = ({ canvasRef,
         <div onMouseDown={handleMouseDown}
             onMouseUp={handleMouseUp}
             onMouseMove={handleMouseMove}
+            onTouchStart={handleMouseDown}
+            onTouchMove={handleMouseMove}
+            onTouchEnd={handleMouseUp}
+            className='absolute top-0 left-0 w-screen h-screen'
         >
             <canvas
                 ref={canvasRef}
-
-
-                className=' border-2 border-black absolute bottom-0 right-0 cursor-crosshair'
+                className={` absolute border-2 border-black cursor-crosshair  w-screen h-screen`}
+                style={{ backgroundColor: canvasColor }}
             />
         </div>
     )

@@ -5,21 +5,60 @@ import { tools } from "@/assets"
 import { TwitterPicker, SliderPicker } from "react-color"
 import { useState } from "react"
 import { LuUndo2, LuRedo2 } from "react-icons/lu"
-import { BiMenu } from "react-icons/bi"
+import Menu from "./Menu"
 
 const Toolbar = ({
     color,
     tool,
     setColor,
     setTool,
+    elements,
+    setElements,
+    history,
+    setHistory,
+    canvasRef,
+    canvasColor,
+    strokeWidth,
+    setStrokeWidth,
 }) => {
     const [showColorPicker, setShowColorPicker] = useState(false)
+
+    const clearCanvas = () => {
+        const canvas = canvasRef.current;
+        const context = canvas.getContext("2d");
+        context.fillStyle = canvasColor;
+        context.fillRect(0, 0, canvas.width, canvas.height);
+        setElements([]);
+    };
+
+    const undo = () => {
+        if (elements.length === 0) return clearCanvas();
+        setHistory((prevHistory) => [
+            ...prevHistory,
+            elements[elements.length - 1],
+        ]);
+        setElements((prevElements) =>
+            prevElements.filter((ele, index) => index !== elements.length - 1)
+        );
+        console.log('undo', elements);
+    };
+    const redo = () => {
+        if (history.length === 0) return;
+        setElements((prevElements) => [
+            ...prevElements,
+            history[history.length - 1],
+        ]);
+        setHistory((prevHistory) =>
+            prevHistory.filter((ele, index) => index !== history.length - 1)
+        );
+    };
+
     return (
-        <div className=" absolute  top-0 w-full z-20">
-            <div className="flex flex-row p-5 justify-between w-11/12 ">
-                <Image src={"/ink.webp"} width={200} height={200} className=" select-none" />
+        <div className=" w-full z-20">
+            <div className="flex flex-row p-5 justify-between w-[90vw] ">
+                <Image src={"/logo.webp"} width={200} height={200} className=" select-none hidden md:block" />
                 <div className="flex flex-row gap-4">
-                    <div className="flex flex-row bg-secondary rounded-lg p-1 gap-1">
+                    <div className="flex flex-row-reverse md:flex-row bg-secondary rounded-lg p-1 gap-1">
                         {
                             tools.map((item, index) => (
                                 <button title={item.title}
@@ -49,21 +88,17 @@ const Toolbar = ({
                         </div>
                     </div>
                     <div className="flex flex-row bg-secondary rounded-lg p-1 gap-1">
-                        <button className="flex flex-col text-xl items-center rounded-lg justify-center p-2 border-black  cursor-pointer font-extrabold text-[#A6ABBD] hover:bg-slate-600 active:text-primary active:bg-tertiary">
+                        <button onClick={undo} className="flex flex-col text-xl items-center rounded-lg justify-center p-2 border-black  cursor-pointer font-extrabold text-[#A6ABBD] hover:bg-slate-600 active:text-primary active:bg-tertiary">
                             <LuUndo2 />
                         </button>
                         <div className=" border-gray-400 border-r h-6 mt-[5px]" />
-                        <button className="flex text-xl flex-col items-center rounded-lg justify-center p-2 border-black  cursor-pointer font-extrabold text-[#A6ABBD] hover:bg-slate-600 active:text-primary active:bg-tertiary">
+                        <button onClick={redo} className="flex text-xl flex-col items-center rounded-lg justify-center p-2 border-black  cursor-pointer font-extrabold text-[#A6ABBD] hover:bg-slate-600 active:text-primary active:bg-tertiary">
                             <LuRedo2 />
                         </button>
                     </div>
                 </div>
                 <div />
-                <div className="flex fixed top-5 right-10 flex-row bg-secondary rounded-lg p-1 gap-1">
-                    <button className="flex flex-col text-2xl items-center rounded-lg justify-center p-1 border-black  cursor-pointer font-extrabold text-[#A6ABBD] active:text-primary ">
-                        <BiMenu />
-                    </button>
-                </div>
+                <Menu clearCanvas={clearCanvas} setStrokeWidth={setStrokeWidth} strokeWidth={strokeWidth} />
             </div>
         </div>
     )

@@ -6,19 +6,32 @@ import { useRef, useState } from "react";
 export default function Home() {
   const canvasRef = useRef(null);
   const ctx = useRef(null);
-  const [color, setColor] = useState("#000000");
+  const [color, setColor] = useState("#ffffff");
   const [elements, setElements] = useState([]);
   const [history, setHistory] = useState([]);
   const [tool, setTool] = useState("pencil");
+  const [canvasColor, setCanvasColor] = useState("#121212");
+  const [strokeWidth, setStrokeWidth] = useState(5);
 
   return (
-    <div>
-      <Toolbar
-        color={color}
-        setColor={setColor}
-        tool={tool}
-        setTool={setTool}
-      />
+    <div className=" relative">
+      <div className=" fixed top-0 z-20">
+        <Toolbar
+          color={color}
+          setColor={setColor}
+          tool={tool}
+          setTool={setTool}
+          history={history}
+          setHistory={setHistory}
+          elements={elements}
+          setElements={setElements}
+          canvasRef={canvasRef}
+          canvasColor={canvasColor}
+          setCanvasColor={setCanvasColor}
+          strokeWidth={strokeWidth}
+          setStrokeWidth={setStrokeWidth}
+        />
+      </div>
       <Board
         canvasRef={canvasRef}
         ctx={ctx}
@@ -28,6 +41,8 @@ export default function Home() {
         setElements={setElements}
         history={history}
         setHistory={setHistory}
+        canvasColor={canvasColor}
+        strokeWidth={strokeWidth}
       />
     </div>
   );
