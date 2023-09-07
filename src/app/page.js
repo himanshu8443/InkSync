@@ -4,7 +4,7 @@ import Toolbar from "@/components/Toolbar";
 import { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
 
-export default function Home() {
+export default function Home({ params }) {
   const canvasRef = useRef(null);
   const ctx = useRef(null);
   const [color, setColor] = useState("#ffffff");
@@ -14,6 +14,8 @@ export default function Home() {
   const [canvasColor, setCanvasColor] = useState("#121212");
   const [strokeWidth, setStrokeWidth] = useState(5);
   const [socket, setSocket] = useState(null);
+  const [userName, setUserName] = useState("Anonymous");
+  const [isLive, setIsLive] = useState(false);
 
   const server = "http://localhost:4000";
   const connectionOptions = {
@@ -24,14 +26,23 @@ export default function Home() {
   };
 
   useEffect(() => {
+    if (params?.roomId?.toString().length !== 20) {
+      setIsLive(false);
+      return;
+    }
+    setIsLive(true);
     const socket = io(server, connectionOptions);
     setSocket(socket);
     socket.on("updateCanvas", (updatedElements) => {
-      if (socket) {
-        console.log(updatedElements);
-        setElements(updatedElements);
-      }
+      console.log(updatedElements);
+      setElements(updatedElements);
     });
+
+    const data = {
+      roomId: params.roomId,
+      userName: userName,
+    };
+    socket.emit("joinRoom", data);
 
     return () => {
       socket.off("updateCanvas");
@@ -41,9 +52,15 @@ export default function Home() {
   const updateCanvas = (updatedElements) => {
     if (socket) {
       // console.log(updatedElements);
-      socket.emit("updateCanvas", updatedElements);
+      const data = {
+        roomId: params.roomId,
+        userName: userName,
+        updatedElements: updatedElements,
+      };
+      socket.emit("updateCanvas", data);
     }
   };
+
   return (
     <div className=" relative">
       <div className=" fixed top-0 z-20">
@@ -61,6 +78,11 @@ export default function Home() {
           setCanvasColor={setCanvasColor}
           strokeWidth={strokeWidth}
           setStrokeWidth={setStrokeWidth}
+          userName={userName}
+          setUserName={setUserName}
+          isLive={isLive}
+          setIsLive={setIsLive}
+          params={params}
         />
       </div>
       <Board

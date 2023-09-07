@@ -13,11 +13,13 @@
   "dependencies": {
     "autoprefixer": "10.4.15",
     "bufferutil": "^4.0.7",
+    "nanoid": "^4.0.2",
     "next": "13.4.19",
     "postcss": "8.4.29",
     "react": "18.2.0",
     "react-color": "^2.19.3",
     "react-dom": "18.2.0",
+    "react-hot-toast": "^2.4.1",
     "react-icons": "^4.10.1",
     "roughjs": "^4.5.2",
     "socket.io-client": "^4.7.2",

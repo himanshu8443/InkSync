@@ -2,6 +2,8 @@ const express = require("express");
 const cors = require("cors");
 const http = require("http");
 const app = express();
+let dotenv = require("dotenv");
+dotenv.config();
 
 const server = http.createServer(app);
 const { Server } = require("socket.io");
@@ -21,24 +23,47 @@ app.get("/", (req, res) => {
   res.send("hello");
 });
 
-let initialElements = [];
+let rooms = [];
+const Port = process.env.PORT || 4000;
 
 io.on("connection", (socket) => {
   console.log("a user connected");
 
-  io.emit("updateCanvas", initialElements); // Send initial elements to the connected client
-  console.log("sent initial elements", initialElements);
-  socket.on("updateCanvas", (updatedElements) => {
+  socket.on("joinRoom", (data) => {
+    console.log("joined room", data.roomId);
+    socket.join(data.roomId);
+    const elements = rooms.find((element) => element.roomId === data.roomId);
+    if (elements) {
+      io.to(socket.id).emit("updateCanvas", elements.elements);
+      elements.user = [...elements.user, socket.id];
+    } else {
+      rooms.push({
+        roomId: data.roomId,
+        elements: [],
+        user: [socket.id],
+      });
+    }
+  });
+  socket.on("updateCanvas", (data) => {
     // Broadcast the updated elements to all connected clients
-    socket.broadcast.emit("updateCanvas", updatedElements);
-    initialElements = updatedElements;
+    socket.to(data.roomId).emit("updateCanvas", data.updatedElements);
+    const elements = rooms.find((element) => element.roomId === data.roomId);
+    if (elements) {
+      elements.elements = data.updatedElements;
+    }
   });
 
   socket.on("disconnect", () => {
-    console.log("User disconnected");
+    rooms.forEach((element) => {
+      element.user = element.user.filter((user) => user !== socket.id);
+      if (element.user.length === 0) {
+        rooms = rooms.filter((room) => room.roomId !== element.roomId);
+      }
+    });
+    // console.log(rooms);
   });
 });
 
-server.listen(4000, () => {
-  console.log("listening on *:4000");
+server.listen(Port, () => {
+  console.log(`listening on *:${Port}`);
 });

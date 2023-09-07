@@ -6,6 +6,7 @@ import { TwitterPicker, SliderPicker } from "react-color"
 import { useState } from "react"
 import { LuUndo2, LuRedo2 } from "react-icons/lu"
 import Menu from "./Menu"
+import Session from "./Session"
 
 const Toolbar = ({
     color,
@@ -20,7 +21,12 @@ const Toolbar = ({
     strokeWidth,
     setStrokeWidth,
     canvasColor,
-    setCanvasColor
+    setCanvasColor,
+    userName,
+    setUserName,
+    isLive,
+    setIsLive,
+    params
 }) => {
     const [showColorPicker, setShowColorPicker] = useState(false)
 
@@ -96,6 +102,7 @@ const Toolbar = ({
                             <LuRedo2 />
                         </button>
                     </div>
+                    <Session userName={userName} setUserName={setUserName} isLive={isLive} setIsLive={setIsLive} params={params} />
                 </div>
                 <div />
                 <Menu clearCanvas={clearCanvas} setStrokeWidth={setStrokeWidth} strokeWidth={strokeWidth} setCanvasColor={setCanvasColor} canvasColor={canvasColor} />
