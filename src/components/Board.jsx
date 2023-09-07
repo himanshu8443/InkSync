@@ -14,6 +14,7 @@ const Board = ({ canvasRef,
     tool,
     canvasColor,
     strokeWidth,
+    updateCanvas,
     socket, }) => {
     const [isDrawing, setIsDrawing] = useState(false)
 
@@ -25,12 +26,14 @@ const Board = ({ canvasRef,
         // canvas.style.height = `${window.innerHeight}px`;
         const context = canvas.getContext("2d");
 
-        context.strokeWidth = strokeWidth;
+        context.strokeWidth = 30;
         context.scale(2, 2);
         context.lineCap = "round";
         context.strokeStyle = color;
         context.lineWidth = 5;
         ctx.current = context;
+
+
     }, []);
     useLayoutEffect(() => {
         const roughCanvas = rough.canvas(canvasRef.current);
@@ -48,7 +51,7 @@ const Board = ({ canvasRef,
                     generator.rectangle(ele.offsetX, ele.offsetY, ele.width, ele.height, {
                         stroke: ele.stroke,
                         roughness: 0,
-                        strokeWidth: strokeWidth
+                        strokeWidth: ele.strokeWidth
                     })
                 );
             } else if (ele.element === "line") {
@@ -56,14 +59,14 @@ const Board = ({ canvasRef,
                     generator.line(ele.offsetX, ele.offsetY, ele.width, ele.height, {
                         stroke: ele.stroke,
                         roughness: 0,
-                        strokeWidth: strokeWidth,
+                        strokeWidth: ele.strokeWidth,
                     })
                 );
             } else if (ele.element === "pencil") {
                 roughCanvas.linearPath(ele.path, {
                     stroke: ele.stroke,
                     roughness: 0,
-                    strokeWidth: strokeWidth,
+                    strokeWidth: ele.strokeWidth,
                 });
             }
             else if (ele.element === "circle") {
@@ -71,13 +74,15 @@ const Board = ({ canvasRef,
                     generator.ellipse(ele.offsetX, ele.offsetY, ele.width, ele.height, {
                         stroke: ele.stroke,
                         roughness: 0,
-                        strokeWidth: strokeWidth,
+                        strokeWidth: ele.strokeWidth,
                     })
                 );
             }
         });
 
     }, [elements]);
+
+
 
 
 
@@ -105,16 +110,24 @@ const Board = ({ canvasRef,
                     path: [[offsetX, offsetY]],
                     stroke: color,
                     element: tool,
+                    strokeWidth: strokeWidth,
                 },
             ]);
-        } else {
+        }
+        else {
             setElements((prevElements) => [
                 ...prevElements,
-                { offsetX, offsetY, stroke: color, element: tool },
+                {
+                    offsetX,
+                    offsetY,
+                    stroke: color,
+                    element: tool,
+                    strokeWidth: strokeWidth
+                },
             ]);
         }
-
         setIsDrawing(true);
+        updateCanvas(elements);
     };
 
     const handleMouseUp = () => {
@@ -149,6 +162,7 @@ const Board = ({ canvasRef,
                             height: offsetY - ele.offsetY,
                             stroke: ele.stroke,
                             element: ele.element,
+                            strokeWidth: ele.strokeWidth,
                         }
                         : ele
                 )
@@ -164,6 +178,7 @@ const Board = ({ canvasRef,
                             height: offsetY,
                             stroke: ele.stroke,
                             element: ele.element,
+                            strokeWidth: ele.strokeWidth,
                         }
                         : ele
                 )
@@ -178,6 +193,7 @@ const Board = ({ canvasRef,
                             path: [...ele.path, [offsetX, offsetY]],
                             stroke: ele.stroke,
                             element: ele.element,
+                            strokeWidth: ele.strokeWidth,
                         }
                         : ele
                 )
@@ -198,11 +214,13 @@ const Board = ({ canvasRef,
                             height: 2 * radius,
                             stroke: ele.stroke,
                             element: ele.element,
+                            strokeWidth: ele.strokeWidth,
                         }
                         : ele
                 )
             );
         }
+        updateCanvas(elements);
     };
 
 
@@ -217,7 +235,7 @@ const Board = ({ canvasRef,
         >
             <canvas
                 ref={canvasRef}
-                className={` absolute border-2 border-black cursor-crosshair  w-screen h-screen`}
+                className={` absolute border-2 border-black  w-screen h-screen ${tool === "eraser" ? "cursor-eraser" : "cursor-crosshair"} `}
                 style={{ backgroundColor: canvasColor }}
             />
         </div>

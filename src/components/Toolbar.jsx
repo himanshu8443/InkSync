@@ -17,9 +17,10 @@ const Toolbar = ({
     history,
     setHistory,
     canvasRef,
-    canvasColor,
     strokeWidth,
     setStrokeWidth,
+    canvasColor,
+    setCanvasColor
 }) => {
     const [showColorPicker, setShowColorPicker] = useState(false)
 
@@ -40,10 +41,9 @@ const Toolbar = ({
         setElements((prevElements) =>
             prevElements.filter((ele, index) => index !== elements.length - 1)
         );
-        console.log('undo', elements);
     };
     const redo = () => {
-        if (history.length === 0) return;
+        if (history.length < 1) return;
         setElements((prevElements) => [
             ...prevElements,
             history[history.length - 1],
@@ -98,7 +98,7 @@ const Toolbar = ({
                     </div>
                 </div>
                 <div />
-                <Menu clearCanvas={clearCanvas} setStrokeWidth={setStrokeWidth} strokeWidth={strokeWidth} />
+                <Menu clearCanvas={clearCanvas} setStrokeWidth={setStrokeWidth} strokeWidth={strokeWidth} setCanvasColor={setCanvasColor} canvasColor={canvasColor} />
             </div>
         </div>
     )

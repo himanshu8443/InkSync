@@ -1,7 +1,8 @@
 "use client";
 import Board from "@/components/Board";
 import Toolbar from "@/components/Toolbar";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { io } from "socket.io-client";
 
 export default function Home() {
   const canvasRef = useRef(null);
@@ -12,7 +13,37 @@ export default function Home() {
   const [tool, setTool] = useState("pencil");
   const [canvasColor, setCanvasColor] = useState("#121212");
   const [strokeWidth, setStrokeWidth] = useState(5);
+  const [socket, setSocket] = useState(null);
 
+  const server = "http://localhost:4000";
+  const connectionOptions = {
+    "force new connection": true,
+    reconnectionAttempts: "Infinity",
+    timeout: 10000,
+    transports: ["websocket"],
+  };
+
+  useEffect(() => {
+    const socket = io(server, connectionOptions);
+    setSocket(socket);
+    socket.on("updateCanvas", (updatedElements) => {
+      if (socket) {
+        console.log(updatedElements);
+        setElements(updatedElements);
+      }
+    });
+
+    return () => {
+      socket.off("updateCanvas");
+    };
+  }, []);
+
+  const updateCanvas = (updatedElements) => {
+    if (socket) {
+      // console.log(updatedElements);
+      socket.emit("updateCanvas", updatedElements);
+    }
+  };
   return (
     <div className=" relative">
       <div className=" fixed top-0 z-20">
@@ -43,6 +74,7 @@ export default function Home() {
         setHistory={setHistory}
         canvasColor={canvasColor}
         strokeWidth={strokeWidth}
+        updateCanvas={updateCanvas}
       />
     </div>
   );
