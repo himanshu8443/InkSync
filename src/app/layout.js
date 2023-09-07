@@ -15,7 +15,6 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <Toaster />
       <body className={itim.className}>{children}</body>
     </html>
   );

@@ -17,7 +17,7 @@ export default function Home({ params }) {
   const [userName, setUserName] = useState("Anonymous");
   const [isLive, setIsLive] = useState(false);
 
-  const server = "http://localhost:4000";
+  const server = process.env.NEXT_PUBLIC_SERVER_URL;
   const connectionOptions = {
     "force new connection": true,
     reconnectionAttempts: "Infinity",

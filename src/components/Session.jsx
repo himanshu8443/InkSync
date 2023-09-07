@@ -74,12 +74,12 @@ const Session = ({ userName, setUserName, isLive, setIsLive, params }) => {
                                                             <button
                                                                 onClick={() => {
                                                                     navigator.clipboard.writeText(`${window.location.origin}/room/${params.roomId}`);
-                                                                    toast('Copied to Clipboard',
-                                                                        {
-                                                                            icon: '📋',
-                                                                            style: { borderRadius: '10px', background: '#333', color: '#fff' },
-                                                                        }
-                                                                    )
+                                                                    // toast('Copied to Clipboard',
+                                                                    //     {
+                                                                    //         icon: '📋',
+                                                                    //         style: { borderRadius: '10px', background: '#333', color: '#fff' },
+                                                                    //     }
+                                                                    // )
                                                                 }}
                                                                 className="bg-primary hover:bg-opacity-70 text-white font-bold py-2 px-4 rounded-full"
                                                             >
