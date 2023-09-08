@@ -2,7 +2,8 @@ import React from 'react'
 
 const loading = () => {
     return (
-        <div>loading</div>
+        <div className=' w-screen h-screen bg-[#121212]'>
+        </div>
     )
 }
 
