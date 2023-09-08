@@ -7,6 +7,7 @@ import { useState } from "react"
 import { LuUndo2, LuRedo2 } from "react-icons/lu"
 import Menu from "./Menu"
 import Session from "./Session"
+import Chat from "./Chat"
 
 const Toolbar = ({
     color,
@@ -26,7 +27,11 @@ const Toolbar = ({
     setUserName,
     isLive,
     setIsLive,
-    params
+    params,
+    updateCanvas,
+    sendMessage,
+    messages,
+    socketId
 }) => {
     const [showColorPicker, setShowColorPicker] = useState(false)
 
@@ -36,6 +41,8 @@ const Toolbar = ({
         context.fillStyle = canvasColor;
         context.fillRect(0, 0, canvas.width, canvas.height);
         setElements([]);
+        setHistory([]);
+        updateCanvas([]);
     };
 
     const undo = () => {
@@ -61,10 +68,10 @@ const Toolbar = ({
 
     return (
         <div className=" w-full z-20">
-            <div className="flex flex-row p-5 justify-between w-[90vw] ">
-                <Image src={"/logo.webp"} width={200} height={200} className=" select-none hidden md:block" />
-                <div className="flex flex-row gap-4">
-                    <div className="flex flex-row-reverse md:flex-row bg-secondary rounded-lg p-1 gap-1">
+            <div className="flex flex-row p-5 justify-between w-[90vw] gap-5 md:gap-8 ">
+                <Image src={"/logo.webp"} width={200} height={200} alt="logo" className=" select-none hidden md:block" />
+                <div className="flex flex-row gap-4 md:gap-8">
+                    <div className="flex flex-row-reverse md:flex-row bg-secondary rounded-lg p-1 gap-1 max-h-11">
                         {
                             tools.map((item, index) => (
                                 <button title={item.title}
@@ -93,7 +100,7 @@ const Toolbar = ({
                             }
                         </div>
                     </div>
-                    <div className="flex flex-row bg-secondary rounded-lg p-1 gap-1">
+                    <div className="flex flex-row bg-secondary rounded-lg p-1 gap-1 max-h-11">
                         <button onClick={undo} className="flex flex-col text-xl items-center rounded-lg justify-center p-2 border-black  cursor-pointer font-extrabold text-[#A6ABBD] hover:bg-slate-600 active:text-primary active:bg-tertiary">
                             <LuUndo2 />
                         </button>
@@ -102,7 +109,10 @@ const Toolbar = ({
                             <LuRedo2 />
                         </button>
                     </div>
-                    <Session userName={userName} setUserName={setUserName} isLive={isLive} setIsLive={setIsLive} params={params} />
+                    <div className="flex flex-row gap-5 max-h-11 max-sm:fixed bottom-4 left-4">
+                        <Session userName={userName} setUserName={setUserName} isLive={isLive} setIsLive={setIsLive} params={params} />
+                        <Chat isLive={isLive} params={params} sendMessage={sendMessage} messages={messages} socketId={socketId} />
+                    </div>
                 </div>
                 <div />
                 <Menu clearCanvas={clearCanvas} setStrokeWidth={setStrokeWidth} strokeWidth={strokeWidth} setCanvasColor={setCanvasColor} canvasColor={canvasColor} />

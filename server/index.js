@@ -28,12 +28,13 @@ const Port = process.env.PORT || 4000;
 
 io.on("connection", (socket) => {
   console.log("a user connected");
-
+  // Join Room
   socket.on("joinRoom", (data) => {
     console.log("joined room", data.roomId);
     socket.join(data.roomId);
     const elements = rooms.find((element) => element.roomId === data.roomId);
     if (elements) {
+      // uppdate the new user with the current canvas
       io.to(socket.id).emit("updateCanvas", elements.elements);
       elements.user = [...elements.user, socket.id];
     } else {
@@ -44,6 +45,7 @@ io.on("connection", (socket) => {
       });
     }
   });
+  // update the canvas
   socket.on("updateCanvas", (data) => {
     // Broadcast the updated elements to all connected clients
     socket.to(data.roomId).emit("updateCanvas", data.updatedElements);
@@ -53,6 +55,14 @@ io.on("connection", (socket) => {
     }
   });
 
+  // send message
+  socket.on("sendMessage", (data) => {
+    // Broadcast the updated elements to all connected clients
+    socket.to(data.roomId).emit("getMessage", data);
+    io.to(socket.id).emit("getMessage", data);
+  });
+
+  //clear elements when no one is in the room
   socket.on("disconnect", () => {
     rooms.forEach((element) => {
       element.user = element.user.filter((user) => user !== socket.id);

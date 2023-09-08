@@ -5,6 +5,7 @@ import live from "@/assets/live.svg"
 import { useRouter } from "next/navigation"
 import { nanoid } from "nanoid";
 import { toast } from "react-hot-toast"
+import { IoClose } from "react-icons/io5"
 
 const Session = ({ userName, setUserName, isLive, setIsLive, params }) => {
     const router = useRouter()
@@ -20,7 +21,7 @@ const Session = ({ userName, setUserName, isLive, setIsLive, params }) => {
         }
     }, [isLive])
     return (
-        <div className=' relative ml-10 left-24'>
+        <div className=' relative lg:ml-10 lg:left-24'>
             <div>
                 {
                     isLive ? (
@@ -28,13 +29,13 @@ const Session = ({ userName, setUserName, isLive, setIsLive, params }) => {
                             onClick={() => {
                                 setShow(!show)
                             }}
-                            className='bg-red-400 hover:bg-opacity-70 text-white font-bold py-2 px-4 rounded-full'>
+                            className='bg-red-400 text-sm lg:text-base whitespace-nowrap hover:bg-opacity-70 text-white font-bold py-2 px-4 rounded-full'>
                             Live Session
                         </button>
                     ) : (
                         <button
                             onClick={() => setShow(!show)}
-                            className='bg-primary hover:bg-opacity-70 text-white font-bold py-2 px-4 rounded-full'>
+                            className='bg-primary whitespace-nowrap hover:bg-opacity-70 text-white font-bold py-2 px-4 rounded-full'>
                             Live Session
                         </button>
                     )
@@ -49,65 +50,69 @@ const Session = ({ userName, setUserName, isLive, setIsLive, params }) => {
                             <div className='bg-secondary text-gray-200 rounded-lg p-5 w-[400px]'
                                 onClick={(e) => e.stopPropagation()}
                             >
-                                <div className='flex flex-row justify-between items-center'>
+                                <div className='flex flex-row justify-between items-center -mt-4'>
                                     <h1 className='text-2xl font-bold'>Live Session</h1>
                                     <button
                                         onClick={() => setShow(!show)}
-                                        className=' hover:bg-opacity-70 text-xl text-white font-bold py-2 px-4 rounded-full'>
-                                        X
+                                        className=' hover:bg-opacity-70 relative left-4 text-xl cursor-pointer text-white font-bold py-2 px-4 rounded-full'>
+                                        <IoClose size={30} />
                                     </button>
                                 </div>
-                                <div className='flex flex-col gap-4 items-center'>
-                                    <Image src={live} width={100} height={100} className=" select-none hidden md:block" />
-                                    <div className='flex flex-row gap-4'>
-                                        {
-                                            isLive ?
-                                                (
-                                                    <div className='flex flex-col gap-2'>
-                                                        <div className=''>
-                                                            <label className='text-sm font-bold'>Share Join Link</label>
-                                                            <p className='text-sm text-gray-400'>Anyone with this link can join the session</p>
-                                                        </div>
-                                                        <div className='flex flex-row gap-2'>
-                                                            <input value={`${window.location.origin}/room/${params.roomId}`}
-                                                                type='text' readOnly className='border border-gray-300 text-gray-700 rounded-lg p-2 w-[300px] cursor-text appearance-none focus:outline-none' />
-                                                            <button
-                                                                onClick={() => {
-                                                                    navigator.clipboard.writeText(`${window.location.origin}/room/${params.roomId}`);
-                                                                    // toast('Copied to Clipboard',
-                                                                    //     {
-                                                                    //         icon: '📋',
-                                                                    //         style: { borderRadius: '10px', background: '#333', color: '#fff' },
-                                                                    //     }
-                                                                    // )
-                                                                }}
-                                                                className="bg-primary hover:bg-opacity-70 text-white font-bold py-2 px-4 rounded-full"
-                                                            >
-                                                                Copy
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                ) :
-                                                (
-                                                    <div className='flex flex-col gap-2'>
-                                                        <label className='text-sm font-bold'>Your Name</label>
-                                                        <input value={userName} onChange={(e) => setUserName(e.target.value)}
-                                                            type='text'
-                                                            placeholder='your Name'
-                                                            className='border border-gray-300 text-gray-700 rounded-lg p-2 w-[300px]'
-                                                        />
-
-                                                    </div>)
-                                        }
+                                <div className={`flex flex-col gap-4 ${isLive ? 'items-start' : 'items-center'}`}>
+                                    <div className='flex justify-center w-full'>
+                                        <Image src={live} width={100} alt="Live" height={100} className=" select-none hidden md:block" />
+                                    </div>
+                                    <div className='flex flex-col gap-2'>
+                                        <label className='text-sm font-bold'>Your Name</label>
+                                        <input value={userName} onChange={(e) => {
+                                            setUserName(e.target.value);
+                                            localStorage.setItem('userName', e.target.value);
+                                        }}
+                                            type='text'
+                                            placeholder='your Name'
+                                            className='border border-gray-300 text-gray-900 rounded-lg p-2 w-[300px]'
+                                        />
                                     </div>
                                     {
+                                        isLive &&
+                                        (
+                                            <div className='flex flex-col gap-2'>
+                                                <div className=''>
+                                                    <label className='text-sm font-bold'>Share Join Link</label>
+                                                    <p className='text-sm text-gray-400'>Anyone with this link can join the session</p>
+                                                </div>
+                                                <div className='flex flex-row gap-2'>
+                                                    <input value={`${window.location.origin}/room/${params.roomId}`}
+                                                        type='text' readOnly className='border border-gray-300 text-gray-800 rounded-lg p-2 w-[300px] cursor-text appearance-none focus:outline-none' />
+                                                    <button
+                                                        onClick={() => {
+                                                            navigator.clipboard.writeText(`${window.location.origin}/room/${params.roomId}`);
+                                                            toast('Copied to Clipboard',
+                                                                {
+                                                                    icon: '📋',
+                                                                    style: { borderRadius: '10px', background: '#333', color: '#fff' },
+                                                                }
+                                                            )
+                                                        }}
+                                                        className="bg-primary hover:bg-opacity-70 text-white font-bold py-2 px-4 rounded-full"
+                                                    >
+                                                        Copy
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        )
+                                    }
+
+                                    {
                                         isLive ? (
-                                            <button
-                                                onClick={() => { setIsLive(false), router.push(`/`) }}
-                                                className="bg-red-500 hover:bg-opacity-70 text-white font-bold py-2 px-4 rounded-full"
-                                            >
-                                                Stop Session
-                                            </button>
+                                            <div className="flex justify-center w-full">
+                                                <button
+                                                    onClick={() => { setIsLive(false), router.push(`/`) }}
+                                                    className="bg-red-500 hover:bg-opacity-70 text-white font-bold py-2 px-4 rounded-full"
+                                                >
+                                                    Stop Session
+                                                </button>
+                                            </div>
                                         )
                                             : (
                                                 <button

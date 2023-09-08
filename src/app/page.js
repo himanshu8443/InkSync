@@ -16,6 +16,7 @@ export default function Home({ params }) {
   const [socket, setSocket] = useState(null);
   const [userName, setUserName] = useState("Anonymous");
   const [isLive, setIsLive] = useState(false);
+  const [messages, setMessages] = useState([]);
 
   const server = process.env.NEXT_PUBLIC_SERVER_URL;
   const connectionOptions = {
@@ -26,6 +27,7 @@ export default function Home({ params }) {
   };
 
   useEffect(() => {
+    setUserName(localStorage.getItem("userName") || "Anonymous");
     if (params?.roomId?.toString().length !== 20) {
       setIsLive(false);
       return;
@@ -34,8 +36,11 @@ export default function Home({ params }) {
     const socket = io(server, connectionOptions);
     setSocket(socket);
     socket.on("updateCanvas", (updatedElements) => {
-      console.log(updatedElements);
       setElements(updatedElements);
+    });
+
+    socket.on("getMessage", (message) => {
+      setMessages((messages) => [...messages, message]);
     });
 
     const data = {
@@ -48,6 +53,18 @@ export default function Home({ params }) {
       socket.off("updateCanvas");
     };
   }, []);
+
+  const sendMessage = (message) => {
+    const data = {
+      message: message,
+      userName: userName,
+      roomId: params.roomId,
+      socketId: socket.id,
+    };
+    if (socket) {
+      socket.emit("sendMessage", data);
+    }
+  };
 
   const updateCanvas = (updatedElements) => {
     if (socket) {
@@ -83,6 +100,10 @@ export default function Home({ params }) {
           isLive={isLive}
           setIsLive={setIsLive}
           params={params}
+          updateCanvas={updateCanvas}
+          messages={messages}
+          sendMessage={sendMessage}
+          socketId={socket?.id}
         />
       </div>
       <Board

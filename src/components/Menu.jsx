@@ -6,7 +6,7 @@ import { MdDeleteOutline } from "react-icons/md"
 const Menu = ({ clearCanvas, setStrokeWidth, strokeWidth, canvasColor, setCanvasColor }) => {
     const [showMenu, setShowMenu] = useState(false)
     return (
-        <div className="flex  fixed top-5 right-10 flex-row bg-secondary rounded-lg p-1 gap-1">
+        <div className="flex  fixed max-lg:bottom-4 lg:top-5 right-10 flex-row bg-secondary rounded-lg p-1 gap-1">
             <button
                 onClick={() => setShowMenu(!showMenu)}
                 className="flex flex-col text-2xl items-center rounded-lg justify-center p-1 border-black  cursor-pointer font-extrabold text-[#A6ABBD] active:text-primary ">
@@ -14,7 +14,7 @@ const Menu = ({ clearCanvas, setStrokeWidth, strokeWidth, canvasColor, setCanvas
             </button>
             {
                 showMenu && (
-                    <div className="absolute top-12 right-0 flex flex-col w-[150px] ">
+                    <div className="absolute bottom-12 lg:bottom-full lg:top-12 right-0 flex flex-col w-[150px] ">
                         <div className="fixed inset-0 z-30" onClick={() => setShowMenu(false)}></div>
                         <div className="relative text-[#b9bed0] flex flex-col bg-secondary rounded-lg p-2 gap-1 z-40">
                             <button onClick={clearCanvas} className="flex text-sm p-1 rounded-lg  border-black  cursor-pointer font-extrabold text-[#b9bed0] hover:bg-slate-600 active:text-primary active:bg-tertiary">
