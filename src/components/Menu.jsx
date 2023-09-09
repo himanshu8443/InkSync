@@ -2,8 +2,62 @@
 import { BiMenu } from "react-icons/bi"
 import { useState } from "react"
 import { MdDeleteOutline } from "react-icons/md"
+import { FaSave } from "react-icons/fa"
+import { AiFillFolderOpen } from "react-icons/ai"
+import { toast } from "react-hot-toast"
 
-const Menu = ({ clearCanvas, setStrokeWidth, strokeWidth, canvasColor, setCanvasColor }) => {
+const Menu = ({ clearCanvas, setStrokeWidth, strokeWidth, canvasColor, setCanvasColor, setElements, elements, updateCanvas }) => {
+    const saveFile = () => {
+        const data = JSON.stringify(elements)
+        console.log(data)
+        const blob = new Blob([data], { type: 'application/ink' })
+        const url = URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.download = 'drawing.ink'
+        link.href = url
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+    }
+
+    const loadFile = () => {
+        const input = document.createElement('input');
+        input.type = 'file';
+
+        // Specify the accept attribute to filter file types by extension
+        input.accept = '.ink';
+
+        input.onchange = (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const fileName = file.name;
+                // Check if the file has the ".ink" extension
+                if (fileName.endsWith('.ink')) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        const data = JSON.parse(event.target.result);
+                        setElements(data);
+                        updateCanvas(data);
+                    };
+                    reader.readAsText(file);
+                    toast('File Loaded Successfully',
+                        {
+                            icon: '📁',
+                            style: { borderRadius: '10px', background: '#333', color: '#fff' },
+                        }
+                    )
+                } else {
+                    // Handle the case where the selected file doesn't have the ".ink" extension
+                    alert('Please select a valid .ink file.');
+                }
+            }
+        };
+
+        input.click();
+    };
+
+
+
     const [showMenu, setShowMenu] = useState(false)
     return (
         <div className="flex  fixed max-lg:bottom-4 lg:top-5 right-10 flex-row bg-secondary rounded-lg p-1 gap-1">
@@ -16,9 +70,19 @@ const Menu = ({ clearCanvas, setStrokeWidth, strokeWidth, canvasColor, setCanvas
                 showMenu && (
                     <div className="absolute bottom-12 lg:bottom-full lg:top-12 right-0 flex flex-col w-[150px] ">
                         <div className="fixed inset-0 z-30" onClick={() => setShowMenu(false)}></div>
-                        <div className="relative text-[#b9bed0] flex flex-col bg-secondary rounded-lg p-2 gap-1 z-40">
-                            <button onClick={clearCanvas} className="flex text-sm p-1 rounded-lg  border-black  cursor-pointer font-extrabold text-[#b9bed0] hover:bg-slate-600 active:text-primary active:bg-tertiary">
+                        <div className="relative text-[#c6cbdc] flex flex-col bg-secondary rounded-lg p-2 gap-1 z-40">
+                            <button onClick={clearCanvas} className="flex items-center text-sm p-1 rounded-lg  border-black  cursor-pointer font-extrabold text-[#b9bed0] hover:bg-slate-600 active:text-primary active:bg-tertiary">
                                 <MdDeleteOutline size={25} className=" text-pink-900" /> Clear Canvas
+                            </button>
+                            <hr className="border-gray-500" />
+                            {/* save file */}
+                            <button onClick={() => { saveFile() }} className="flex gap-2 items-center text-base p-1 rounded-lg  border-black  cursor-pointer font-extrabold text-[#b9bed0] hover:bg-slate-600 active:text-primary active:bg-tertiary">
+                                Save File <FaSave size={15} className=" text-gray-300" />
+                            </button>
+                            <hr className="border-gray-500" />
+                            {/* load file */}
+                            <button onClick={() => { loadFile() }} className="flex gap-2 items-center text-base p-1 rounded-lg  border-black  cursor-pointer font-extrabold text-[#b9bed0] hover:bg-slate-600 active:text-primary active:bg-tertiary">
+                                Open File <AiFillFolderOpen size={17} className=" text-gray-300" />
                             </button>
                             <hr className="border-gray-500" />
                             <label className=" text-[#b9bed0]" >

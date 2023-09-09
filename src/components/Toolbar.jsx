@@ -115,7 +115,7 @@ const Toolbar = ({
                     </div>
                 </div>
                 <div />
-                <Menu clearCanvas={clearCanvas} setStrokeWidth={setStrokeWidth} strokeWidth={strokeWidth} setCanvasColor={setCanvasColor} canvasColor={canvasColor} />
+                <Menu clearCanvas={clearCanvas} setStrokeWidth={setStrokeWidth} strokeWidth={strokeWidth} setCanvasColor={setCanvasColor} canvasColor={canvasColor} elements={elements} setElements={setElements} updateCanvas={updateCanvas} />
             </div>
         </div>
     )
