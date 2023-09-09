@@ -15,17 +15,38 @@ A Real-Time Collaborative Whiteboard Web App built with NextJs.
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+## Installation
 
-First, run the development server:
+1. Clone the repository to your local machine.
+    ```sh
+    git clone https://github.com/himanshu8443/InkSync.git
+    ```
+    
+2. Install the required packages.
+    ```sh
+    cd InkSync
+    npm install
+    
+    cd server
+    npm install
+    ```
+    
+3. Set up the environment variables:
+   Create a .env file in the root directory
+   ```sh
+   NEXT_PUBLIC_SERVER_URL= # URL of the server (e.g. http://localhost:3000 in development mode)
+   ```
+   Create a .env file in the server directory
+   ```sh
+   PORT = "5000"
+   ```
+   
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+5. Start the development server.
+    ```sh
+    npm run dev
+    ```
+
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
