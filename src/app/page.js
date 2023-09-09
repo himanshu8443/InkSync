@@ -43,6 +43,13 @@ export default function Home({ params }) {
       setMessages((messages) => [...messages, message]);
     });
 
+    // ping server every 2 min to prevent render server from sleeping
+    socket.on("ping", () => {
+      settimeout(() => {
+        socket.emit("pong");
+      }, 120000);
+    });
+
     const data = {
       roomId: params.roomId,
       userName: userName,

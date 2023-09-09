@@ -62,6 +62,13 @@ io.on("connection", (socket) => {
     io.to(socket.id).emit("getMessage", data);
   });
 
+  // ping server every 2 min to prevent render server from sleeping
+  socket.on("pong", () => {
+    setTimeout(() => {
+      socket.emit("ping");
+    }, 120000);
+  });
+
   //clear elements when no one is in the room
   socket.on("disconnect", () => {
     rooms.forEach((element) => {
