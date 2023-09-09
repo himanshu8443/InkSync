@@ -1,3 +1,18 @@
+   [![Project Banner](https://github.com/himanshu8443/InkSync/assets/99420590/0e79c4b5-a834-4235-a741-67ca97e02abd)](http://inksync.cloud/)
+
+   
+A Real-Time Collaborative Whiteboard Web App built with NextJs.
+---
+## Features
+* Share canvas in real-time easily just by sharing a link.
+* Chat with people in the room.
+* Own file extension .ink Save the drawing files locally on your device.
+
+---
+## ScreenShots
+![image](https://github.com/himanshu8443/InkSync/assets/99420590/9e3e6c80-f31c-4c2f-a6f5-81f0ca06b69b)
+
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
