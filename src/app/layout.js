@@ -10,6 +10,7 @@ const itim = Itim({
 export const metadata = {
   title: "InkSync",
   description: "A collaborative whiteboard for everyone.",
+  manifest: "/manifest.json",
 };
 
 export default function RootLayout({ children }) {
@@ -18,7 +19,7 @@ export default function RootLayout({ children }) {
       <body className={itim.className}>
         <Toaster />
         {children}
-        </body>
+      </body>
     </html>
   );
 }
