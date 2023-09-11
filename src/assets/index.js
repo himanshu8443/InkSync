@@ -25,9 +25,9 @@ export const tools = [
     icon: <BsCircle />,
     value: "circle",
   },
-  // {
-  //   title: "Eraser",
-  //   icon: <BiEraser />,
-  //   value: "eraser",
-  // },
+  {
+    title: "Eraser",
+    icon: <BiEraser />,
+    value: "eraser",
+  },
 ]; // tools

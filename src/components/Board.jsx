@@ -17,6 +17,7 @@ const Board = ({ canvasRef,
     updateCanvas,
     socket, }) => {
     const [isDrawing, setIsDrawing] = useState(false)
+    const [eraser, setEraser] = useState(false)
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -77,13 +78,16 @@ const Board = ({ canvasRef,
                         strokeWidth: ele.strokeWidth,
                     })
                 );
+            } else if (ele.element === "eraser") {
+                roughCanvas.linearPath(ele.path, {
+                    stroke: ele.stroke,
+                    roughness: 0,
+                    strokeWidth: ele.strokeWidth,
+                });
             }
         });
 
-    }, [elements]);
-
-
-
+    }, [elements, elements?.length]);
 
 
     const handleMouseDown = (e) => {
@@ -114,6 +118,19 @@ const Board = ({ canvasRef,
                 },
             ]);
         }
+        else if (tool === "eraser") {
+            setElements((prevElements) => [
+                ...prevElements,
+                {
+                    offsetX,
+                    offsetY,
+                    path: [[offsetX, offsetY]],
+                    stroke: canvasColor,
+                    element: tool,
+                    strokeWidth: strokeWidth > 30 ? strokeWidth : 30,
+                },
+            ]);
+        }
         else {
             setElements((prevElements) => [
                 ...prevElements,
@@ -135,6 +152,10 @@ const Board = ({ canvasRef,
     };
 
     const handleMouseMove = (e) => {
+        setEraser({
+            x: e.clientX,
+            y: e.clientY,
+        })
         if (!isDrawing) {
             return;
         }
@@ -220,6 +241,22 @@ const Board = ({ canvasRef,
                 )
             );
         }
+        else if (tool === "eraser") {
+            setElements((prevElements) =>
+                prevElements.map((ele, index) =>
+                    index === elements.length - 1
+                        ? {
+                            offsetX: ele.offsetX,
+                            offsetY: ele.offsetY,
+                            path: [...ele.path, [offsetX, offsetY]],
+                            stroke: ele.stroke,
+                            element: ele.element,
+                            strokeWidth: ele.strokeWidth,
+                        }
+                        : ele
+                )
+            );
+        }
         updateCanvas(elements);
     };
 
@@ -235,8 +272,20 @@ const Board = ({ canvasRef,
         >
             <canvas
                 ref={canvasRef}
-                className={` absolute border-2 border-black  w-screen h-screen ${tool === "eraser" ? "cursor-eraser" : "cursor-crosshair"} `}
+                className={` absolute border-2 border-black  w-screen h-screen ${tool === "eraser" ? "cursor-none" : "cursor-crosshair"} `}
                 style={{ backgroundColor: canvasColor }}
+            />
+            <div className=" eraser pointer-events-none bg-secondary"
+                style={{
+                    display: tool === "eraser" ? "block" : "none",
+                    left: eraser.x,
+                    top: eraser.y,
+                    minHeight: `30px`,
+                    minWidth: `30px`,
+                    height: `${strokeWidth}px`,
+                    width: `${strokeWidth}px`,
+                }
+                }
             />
         </div>
     )

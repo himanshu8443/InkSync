@@ -46,7 +46,7 @@ const Toolbar = ({
     };
 
     const undo = () => {
-        if (elements.length === 0) return clearCanvas();
+        if (elements.length < 1) return;
         setHistory((prevHistory) => [
             ...prevHistory,
             elements[elements.length - 1],

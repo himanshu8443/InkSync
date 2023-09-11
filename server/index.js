@@ -35,12 +35,12 @@ io.on("connection", (socket) => {
     const elements = rooms.find((element) => element.roomId === data.roomId);
     if (elements) {
       // uppdate the new user with the current canvas
-      io.to(socket.id).emit("updateCanvas", elements.elements);
+      io.to(socket.id).emit("updateCanvas", elements);
       elements.user = [...elements.user, socket.id];
     } else {
       rooms.push({
         roomId: data.roomId,
-        elements: [],
+        updatedElements: [],
         user: [socket.id],
       });
     }
@@ -48,10 +48,10 @@ io.on("connection", (socket) => {
   // update the canvas
   socket.on("updateCanvas", (data) => {
     // Broadcast the updated elements to all connected clients
-    socket.to(data.roomId).emit("updateCanvas", data.updatedElements);
+    socket.to(data.roomId).emit("updateCanvas", data);
     const elements = rooms.find((element) => element.roomId === data.roomId);
     if (elements) {
-      elements.elements = data.updatedElements;
+      elements.updatedElements = data.updatedElements;
     }
   });
 

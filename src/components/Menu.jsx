@@ -1,6 +1,6 @@
 'use client'
 import { BiMenu } from "react-icons/bi"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { MdDeleteOutline } from "react-icons/md"
 import { FaSave } from "react-icons/fa"
 import { AiFillFolderOpen } from "react-icons/ai"
@@ -56,7 +56,9 @@ const Menu = ({ clearCanvas, setStrokeWidth, strokeWidth, canvasColor, setCanvas
         input.click();
     };
 
-
+    useEffect(() => {
+        clearCanvas()
+    }, [canvasColor])
 
     const [showMenu, setShowMenu] = useState(false)
     return (
@@ -92,7 +94,7 @@ const Menu = ({ clearCanvas, setStrokeWidth, strokeWidth, canvasColor, setCanvas
                                 (e) => setStrokeWidth(e.target.value)
                             } type="range" value={strokeWidth} min={0} max="100" className="range range-[3px] cursor-pointer" />
                             <hr className="border-gray-500 mt-2" />
-                            <p>Canvas Color</p>
+                            <p>Change Canvas</p>
                             <div className="flex flex-row gap-2">
                                 <button onClick={() => setCanvasColor("#ffffff")} className={`w-8 h-8 rounded-lg bg-white  cursor-pointer ${canvasColor === "#ffffff" ? " border-primary border" : ''}`}></button>
                                 <button onClick={() => setCanvasColor("#000000")} className={`w-8 h-8 rounded-lg bg-black cursor-pointer ${canvasColor === "#000000" ? " border-primary border" : ''}`}></button>

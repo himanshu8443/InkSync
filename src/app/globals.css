@@ -75,3 +75,12 @@ body {
     transform: scale(1.2)
   }
 }
+
+
+
+.eraser {
+  border-radius: 50%;
+  position: absolute;
+  transform: translate3d(-50%, -50%, 0);
+  transition: transform 0s cubic-bezier(.02, 1.23, .79, 1.08);
+}

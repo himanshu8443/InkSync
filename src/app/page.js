@@ -35,8 +35,9 @@ export default function Home({ params }) {
     setIsLive(true);
     const socket = io(server, connectionOptions);
     setSocket(socket);
-    socket.on("updateCanvas", (updatedElements) => {
-      setElements(updatedElements);
+    socket.on("updateCanvas", (data) => {
+      setElements(data.updatedElements);
+      setCanvasColor(data.canvasColor);
     });
 
     socket.on("getMessage", (message) => {
@@ -80,6 +81,7 @@ export default function Home({ params }) {
         roomId: params.roomId,
         userName: userName,
         updatedElements: updatedElements,
+        canvasColor: canvasColor,
       };
       socket.emit("updateCanvas", data);
     }
