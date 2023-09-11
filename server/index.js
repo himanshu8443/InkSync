@@ -42,6 +42,7 @@ io.on("connection", (socket) => {
         roomId: data.roomId,
         updatedElements: [],
         user: [socket.id],
+        canvasColor: "#121212",
       });
     }
   });
@@ -52,6 +53,7 @@ io.on("connection", (socket) => {
     const elements = rooms.find((element) => element.roomId === data.roomId);
     if (elements) {
       elements.updatedElements = data.updatedElements;
+      elements.canvasColor = data.canvasColor;
     }
   });
 
