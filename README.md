@@ -10,7 +10,7 @@ A Real-Time Collaborative Whiteboard Web App built with NextJs.
 
 ---
 ## ScreenShots
-![image](https://github.com/himanshu8443/InkSync/assets/99420590/9e3e6c80-f31c-4c2f-a6f5-81f0ca06b69b)
+![image](https://github.com/himanshu8443/InkSync/assets/99420590/4971f9c1-5c19-436a-af31-664ecda2084d)
 
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
