@@ -14,7 +14,7 @@
     "autoprefixer": "10.4.15",
     "bufferutil": "^4.0.7",
     "nanoid": "^4.0.2",
-    "next": "14.1.1",
+    "next": "14.2.12",
     "next-pwa": "^5.6.0",
     "postcss": "8.4.31",
     "react": "18.2.0",
